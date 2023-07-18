@@ -11,14 +11,18 @@ const {upload} =require("./multer.js")
 app.post('/upload', upload.fields([
   { name: 'landingImage', maxCount: 1 },
   { name: 'video', maxCount: 1 },
- //  { name: 'image', maxCount: 5 }
+   { name: 'image', maxCount: 5 }
 ]),(req, res) => {
   try {
-    //console.log(req.body);
+    console.log("image : ",req.files["image"]);
     let url="http://localhost:4000/files/";
- req.body.image=url+req.files["landingImage"][0].filename;
+ req.body.landingImage=url+req.files["landingImage"][0].filename;
  req.body.video=url+req.files["video"][0].filename;
-
+ if (req.files && req.files["image"]) {
+  req.body.image = req.files["image"].map(image => url + image.filename);
+} else {
+  req.body.image = [];
+}
 console.log(req.body)
 res.send("true");
   } catch (error) {

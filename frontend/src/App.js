@@ -17,8 +17,9 @@ export default function AddInventory({ closeModel }) {
   };
 
   const handleChangeImage = (event) => {
-    const imageFile = event.target.files;
-    productFormik.setFieldValue("image", imageFile);
+    const imageFiles = event.target.files;
+    const imageArray = Array.from(imageFiles);
+    productFormik.setFieldValue("image", imageArray);
   };
 
   const handleChangeVideo = (event) => {
@@ -36,7 +37,7 @@ export default function AddInventory({ closeModel }) {
       landingImage: "",
       description: "",
       discount: 0,
-      image: [],
+      image: "",
       video: "",
     },
     // validationSchema: InputSchema,
@@ -52,6 +53,10 @@ export default function AddInventory({ closeModel }) {
         formData.append("description", values.description);
         formData.append("discount", values.discount);
         formData.append("video",values.video)
+        for (let i = 0; i < values.image.length; i++) {
+          formData.append('image', values.image[i]);
+        }
+       // formData.append("image",values.image)
         var data = await axios.post(
           "http://localhost:4000/upload",
           formData
